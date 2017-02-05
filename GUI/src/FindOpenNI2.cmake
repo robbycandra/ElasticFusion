@@ -32,8 +32,10 @@ find_path(OPENNI2_INCLUDE_DIR OpenNI.h
             "${CMAKE_SOURCE_DIR}/../../deps/OpenNI2/Include"
             "${CMAKE_SOURCE_DIR}/../../../deps/OpenNI2/Include"
             "${CMAKE_SOURCE_DIR}/../../../../deps/OpenNI2/Include"
+            "$ENV{OPENNI2_INCLUDE}"
             /usr/include
             /user/include
+
           PATH_SUFFIXES openni2 ni2
 )
 
@@ -50,7 +52,7 @@ find_library(OPENNI2_LIBRARY
                ${PC_OPENNI_LIBDIR}
                ${PC_OPENNI_LIBRARY_DIRS}
              PATHS
-               "${PROGRAM_FILES}}/OpenNI2/Redist"
+               "${PROGRAM_FILES}/OpenNI2/Redist"
                "${PROGRAM_FILES}/OpenNI2"
                "${CMAKE_SOURCE_DIR}/../OpenNI2/Bin/x64-Release"
                "${CMAKE_SOURCE_DIR}/../../OpenNI2/Bin/x64-Release"
@@ -62,6 +64,7 @@ find_library(OPENNI2_LIBRARY
                "${CMAKE_SOURCE_DIR}/../../deps/OpenNI2/Bin/x64-Release"
                "${CMAKE_SOURCE_DIR}/../../../deps/OpenNI2/Bin/x64-Release"
                "${CMAKE_SOURCE_DIR}/../../../../deps/OpenNI2/Bin/x64-Release"
+               "$ENV{OPENNI2_REDIST}"
                /usr/lib
                /user/lib
              PATH_SUFFIXES ${OPENNI_PATH_SUFFIXES}

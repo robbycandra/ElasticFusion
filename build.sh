@@ -27,7 +27,7 @@ fi
 
 sudo apt-get install -y g++ python doxygen graphviz 
 
-sudo apt-get install -y cmake-qt-gui git build-essential libusb-1.0-0-dev libudev-dev default-jdk freeglut3-dev libglew-dev cuda libsuitesparse-dev libeigen3-dev zlib1g-dev libjpeg-dev
+sudo apt-get install -y cmake-qt-gui git build-essential libusb-1.0-0-dev libudev-dev default-jdk freeglut3-dev libglew-dev cuda libsuitesparse-dev libeigen3-dev zlib1g-dev libjpeg-dev libpng-dev
 
 #Installing Pangolin
 git clone https://github.com/stevenlovegrove/Pangolin.git
@@ -58,20 +58,19 @@ cd ..
 cd ../Core
 mkdir build
 cd build
-cmake ../src
-#cmake -G "Eclipse CDT4 - Unix Makefiles" ../src
-make -j8
+cmake ../src -DCMAKE_BUILD_TYPE=Debug
+make -j4
 
 cd ../../GPUTest
 mkdir build
 cd build
 cmake ../src
 #cmake -G "Eclipse CDT4 - Unix Makefiles" ../src
-make -j8
+make -j4
 
 cd ../../GUI
 mkdir build
 cd build
-cmake ../src
+cmake ../src -DCMAKE_BUILD_TYPE=Debug
 #cmake -G "Eclipse CDT4 - Unix Makefiles" ../src
-make -j8
+make -j4
