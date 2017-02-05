@@ -27,11 +27,17 @@ find_package(OpenNI2 REQUIRED)
 find_package(efusion REQUIRED)
 find_package(SuiteSparse REQUIRED)
 
-if(WIN32)
-  find_package(RealSense QUIET)
-  CANONIFY_BOOL(REALSENSE_FOUND)
-  message(STATUS "librealsense found: ${REALSENSE_FOUND}")
-  option(WITH_REALSENSE "Build with Intel RealSense support?" ${REALSENSE_FOUND})
+find_package(RealSense QUIET)
+if (REALSENSE_FOUND)
+  set(${REALSENSE_FOUND} TRUE)
+else()
+  set(${REALSENSE_FOUND} FALSE)
+endif()
+message(STATUS "librealsense found: ${REALSENSE_FOUND}")
+option(WITH_REALSENSE "Build with Intel RealSense support?" ${REALSENSE_FOUND})
+if(WITH_REALSENSE)
+  include_directories(${REALSENSE_INCLUDE_DIR})
+  add_definitions(-DWITH_REALSENSE)
 endif()
 
 if(WIN32)
@@ -44,12 +50,6 @@ include_directories(${Pangolin_INCLUDE_DIRS})
 include_directories(${CUDA_INCLUDE_DIRS})
 include_directories(${EFUSION_INCLUDE_DIR})
 include_directories(${OPENNI2_INCLUDE_DIR})
-
-if(WITH_REALSENSE)
-  include_directories(${REALSENSE_INCLUDE_DIR})
-  add_definitions(-DWITH_REALSENSE)
-  set(EXTRA_LIBS ${EXTRA_LIBS} ${REALSENSE_LIBRARY})
-endif()
 
 file(GLOB srcs *.cpp)
 file(GLOB tools_srcs Tools/*.cpp)
@@ -69,6 +69,7 @@ else()
   add_definitions(-Dlinux=1)
 endif()
 
+set (CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_FLAGS ${ADDITIONAL_CMAKE_CXX_FLAGS} "-O3 -msse2 -msse3 -Wall -std=c++11")
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -Wall -std=c++11")
 
@@ -91,7 +92,9 @@ target_link_libraries(ElasticFusion
                       ${BLAS_LIBRARIES}
                       ${LAPACK_LIBRARIES}
 )
-
+if(WITH_REALSENSE)
+  target_link_libraries(ElasticFusion ${REALSENSE_LIBRARY})
+endif()
 
 INSTALL(TARGETS ElasticFusion
         RUNTIME DESTINATION bin
