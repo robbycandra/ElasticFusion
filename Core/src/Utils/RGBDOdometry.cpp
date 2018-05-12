@@ -160,7 +160,7 @@ void RGBDOdometry::initICP(GPUTexture * predictedVertices, GPUTexture * predicte
     for(int i = 1; i < NUM_PYRS; ++i)
     {
         resizeVMap(vmaps_curr_[i - 1], vmaps_curr_[i]);
-        resizeNMap(vmaps_curr_[i - 1], vmaps_curr_[i]);
+        resizeNMap(nmaps_curr_[i - 1], nmaps_curr_[i]);
     }
 
     cudaDeviceSynchronize();
@@ -459,13 +459,14 @@ void RGBDOdometry::getIncrementalTransformation(Eigen::Vector3f & trans,
             }
 
             float sigmaVal = std::sqrt((float)sigma / rgbSize == 0 ? 1 : rgbSize);
+            float rgbError = std::sqrt(sigma) / (rgbSize == 0 ? 1 : rgbSize);
 
-            if(rgbOnly && sqrt(sigma) / rgbSize > lastRGBError)
+            if(rgbOnly && rgbError > lastRGBError)
             {
                 break;
             }
 
-            lastRGBError = sqrt(sigma) / rgbSize;
+            lastRGBError = rgbError;
             lastRGBCount = rgbSize;
 
             if(rgbOnly)
